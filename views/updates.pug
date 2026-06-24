@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    title= title
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="/css/style.css")
+  body
+    h1 Add a New Book
+    p
+      a(href="/") Return to the homepage
+    .form-wrapper
+      form(action="/update-cobj", method="POST")
+        label(for="book_title") Book Title
+        input(type="text", id="book_title", name="book_title")
+        label(for="book_author") Author
+        input(type="text", id="book_author", name="book_author")
+        label(for="book_genre") Genre
+        input(type="text", id="book_genre", name="book_genre")
+        input(type="submit", value="Add Book")
