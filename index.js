@@ -8,13 +8,11 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// * Please DO NOT INCLUDE the private app access token in your repo. Don't do this practicum in your normal account.
-const PRIVATE_APP_ACCESS = process.env.PRIVATE_APP_ACCESS || '';
-const CUSTOM_OBJECT_TYPE = process.env.CUSTOM_OBJECT_TYPE || '2-xxxxxxx';
+const PRIVATE_APP_ACCESS = process.env.PRIVATE_APP_ACCESS;
 
-// ROUTE 1 - Homepage: fetch all custom objects and render a table
+// ROUTE 1 - Homepage: fetch all Book custom object records and render table
 app.get('/', async (req, res) => {
-    const url = `https://api.hubapi.com/crm/v3/objects/${CUSTOM_OBJECT_TYPE}?properties=book_title,book_author,book_genre`;
+    const url = 'https://api.hubapi.com/crm/v3/objects/2-64725003?properties=book_title,author,genre&limit=100';
     const headers = {
         Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
         'Content-Type': 'application/json'
@@ -22,35 +20,36 @@ app.get('/', async (req, res) => {
     try {
         const resp = await axios.get(url, { headers });
         const data = resp.data.results;
-        res.render('homepage', { title: 'Books | HubSpot APIs', data });
+        res.render('homepage', { title: 'Books | Integrating With HubSpot I Practicum', data });
     } catch (error) {
         console.error(error);
-        res.render('homepage', { title: 'Books | HubSpot APIs', data: [] });
     }
 });
 
-// ROUTE 2 - Render the create/update form
+// ROUTE 2 - GET form to create a new Book record
 app.get('/update-cobj', (req, res) => {
     res.render('updates', { title: 'Update Custom Object Form | Integrating With HubSpot I Practicum' });
 });
 
-// ROUTE 3 - POST: create a new CRM record from form data, then redirect to homepage
+// ROUTE 3 - POST form data to create a new Book CRM record
 app.post('/update-cobj', async (req, res) => {
-    const { book_title, book_author, book_genre } = req.body;
-    const url = `https://api.hubapi.com/crm/v3/objects/${CUSTOM_OBJECT_TYPE}`;
+    const url = 'https://api.hubapi.com/crm/v3/objects/2-64725003';
     const headers = {
         Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
         'Content-Type': 'application/json'
     };
     const body = {
-        properties: { book_title, book_author, book_genre }
+        properties: {
+            book_title: req.body.book_title,
+            author: req.body.author,
+            genre: req.body.genre
+        }
     };
     try {
         await axios.post(url, body, { headers });
         res.redirect('/');
     } catch (error) {
         console.error(error);
-        res.redirect('/');
     }
 });
 
