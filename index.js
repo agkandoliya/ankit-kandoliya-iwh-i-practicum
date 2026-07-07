@@ -11,7 +11,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 
-const private_app_token = 'pat-na1-4afbb534-3072-4eb9-b4cb-6896300a420a'
+const private_app_token = 'pat-na1-889b426e-69c8-4009-ba0b-192e3a4bcf95'
 
 
 app.get('/', async (req, res) => {
